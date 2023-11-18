@@ -25,7 +25,7 @@ const AccountModelSchema = IsarGeneratedSchema(
         type: IsarType.long,
       ),
       IsarPropertySchema(
-        name: 'totpStr',
+        name: 'totpFormatted',
         type: IsarType.string,
       ),
       IsarPropertySchema(
@@ -70,7 +70,7 @@ const AccountModelSchema = IsarGeneratedSchema(
 @isarProtected
 int serializeAccountModel(IsarWriter writer, AccountModel object) {
   IsarCore.writeLong(writer, 1, object.totp);
-  IsarCore.writeString(writer, 2, object.totpStr);
+  IsarCore.writeString(writer, 2, object.totpFormatted);
   IsarCore.writeString(writer, 3, object.appname);
   IsarCore.writeString(writer, 4, object.username);
   IsarCore.writeString(writer, 5, object.secret);
@@ -144,7 +144,7 @@ sealed class _AccountModelUpdate {
   bool call({
     required int id,
     int? totp,
-    String? totpStr,
+    String? totpFormatted,
     String? appname,
     String? username,
     String? secret,
@@ -164,7 +164,7 @@ class _AccountModelUpdateImpl implements _AccountModelUpdate {
   bool call({
     required int id,
     Object? totp = ignore,
-    Object? totpStr = ignore,
+    Object? totpFormatted = ignore,
     Object? appname = ignore,
     Object? username = ignore,
     Object? secret = ignore,
@@ -177,7 +177,7 @@ class _AccountModelUpdateImpl implements _AccountModelUpdate {
           id
         ], {
           if (totp != ignore) 1: totp as int?,
-          if (totpStr != ignore) 2: totpStr as String?,
+          if (totpFormatted != ignore) 2: totpFormatted as String?,
           if (appname != ignore) 3: appname as String?,
           if (username != ignore) 4: username as String?,
           if (secret != ignore) 5: secret as String?,
@@ -194,7 +194,7 @@ sealed class _AccountModelUpdateAll {
   int call({
     required List<int> id,
     int? totp,
-    String? totpStr,
+    String? totpFormatted,
     String? appname,
     String? username,
     String? secret,
@@ -214,7 +214,7 @@ class _AccountModelUpdateAllImpl implements _AccountModelUpdateAll {
   int call({
     required List<int> id,
     Object? totp = ignore,
-    Object? totpStr = ignore,
+    Object? totpFormatted = ignore,
     Object? appname = ignore,
     Object? username = ignore,
     Object? secret = ignore,
@@ -225,7 +225,7 @@ class _AccountModelUpdateAllImpl implements _AccountModelUpdateAll {
   }) {
     return collection.updateProperties(id, {
       if (totp != ignore) 1: totp as int?,
-      if (totpStr != ignore) 2: totpStr as String?,
+      if (totpFormatted != ignore) 2: totpFormatted as String?,
       if (appname != ignore) 3: appname as String?,
       if (username != ignore) 4: username as String?,
       if (secret != ignore) 5: secret as String?,
@@ -246,7 +246,7 @@ extension AccountModelUpdate on IsarCollection<int, AccountModel> {
 sealed class _AccountModelQueryUpdate {
   int call({
     int? totp,
-    String? totpStr,
+    String? totpFormatted,
     String? appname,
     String? username,
     String? secret,
@@ -266,7 +266,7 @@ class _AccountModelQueryUpdateImpl implements _AccountModelQueryUpdate {
   @override
   int call({
     Object? totp = ignore,
-    Object? totpStr = ignore,
+    Object? totpFormatted = ignore,
     Object? appname = ignore,
     Object? username = ignore,
     Object? secret = ignore,
@@ -277,7 +277,7 @@ class _AccountModelQueryUpdateImpl implements _AccountModelQueryUpdate {
   }) {
     return query.updateProperties(limit: limit, {
       if (totp != ignore) 1: totp as int?,
-      if (totpStr != ignore) 2: totpStr as String?,
+      if (totpFormatted != ignore) 2: totpFormatted as String?,
       if (appname != ignore) 3: appname as String?,
       if (username != ignore) 4: username as String?,
       if (secret != ignore) 5: secret as String?,
@@ -305,7 +305,7 @@ class _AccountModelQueryBuilderUpdateImpl implements _AccountModelQueryUpdate {
   @override
   int call({
     Object? totp = ignore,
-    Object? totpStr = ignore,
+    Object? totpFormatted = ignore,
     Object? appname = ignore,
     Object? username = ignore,
     Object? secret = ignore,
@@ -318,7 +318,7 @@ class _AccountModelQueryBuilderUpdateImpl implements _AccountModelQueryUpdate {
     try {
       return q.updateProperties(limit: limit, {
         if (totp != ignore) 1: totp as int?,
-        if (totpStr != ignore) 2: totpStr as String?,
+        if (totpFormatted != ignore) 2: totpFormatted as String?,
         if (appname != ignore) 3: appname as String?,
         if (username != ignore) 4: username as String?,
         if (secret != ignore) 5: secret as String?,
@@ -428,7 +428,7 @@ extension AccountModelQueryFilter
   }
 
   QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition>
-      totpStrEqualTo(
+      totpFormattedEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -444,7 +444,7 @@ extension AccountModelQueryFilter
   }
 
   QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition>
-      totpStrGreaterThan(
+      totpFormattedGreaterThan(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -460,7 +460,7 @@ extension AccountModelQueryFilter
   }
 
   QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition>
-      totpStrGreaterThanOrEqualTo(
+      totpFormattedGreaterThanOrEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -476,7 +476,7 @@ extension AccountModelQueryFilter
   }
 
   QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition>
-      totpStrLessThan(
+      totpFormattedLessThan(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -492,7 +492,7 @@ extension AccountModelQueryFilter
   }
 
   QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition>
-      totpStrLessThanOrEqualTo(
+      totpFormattedLessThanOrEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -508,7 +508,7 @@ extension AccountModelQueryFilter
   }
 
   QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition>
-      totpStrBetween(
+      totpFormattedBetween(
     String lower,
     String upper, {
     bool caseSensitive = true,
@@ -526,7 +526,7 @@ extension AccountModelQueryFilter
   }
 
   QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition>
-      totpStrStartsWith(
+      totpFormattedStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -542,7 +542,7 @@ extension AccountModelQueryFilter
   }
 
   QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition>
-      totpStrEndsWith(
+      totpFormattedEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -558,7 +558,7 @@ extension AccountModelQueryFilter
   }
 
   QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition>
-      totpStrContains(String value, {bool caseSensitive = true}) {
+      totpFormattedContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         ContainsCondition(
@@ -571,7 +571,7 @@ extension AccountModelQueryFilter
   }
 
   QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition>
-      totpStrMatches(String pattern, {bool caseSensitive = true}) {
+      totpFormattedMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         MatchesCondition(
@@ -584,7 +584,7 @@ extension AccountModelQueryFilter
   }
 
   QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition>
-      totpStrIsEmpty() {
+      totpFormattedIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         const EqualCondition(
@@ -596,7 +596,7 @@ extension AccountModelQueryFilter
   }
 
   QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition>
-      totpStrIsNotEmpty() {
+      totpFormattedIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         const GreaterCondition(
@@ -1773,7 +1773,7 @@ extension AccountModelQuerySortBy
     });
   }
 
-  QueryBuilder<AccountModel, AccountModel, QAfterSortBy> sortByTotpStr(
+  QueryBuilder<AccountModel, AccountModel, QAfterSortBy> sortByTotpFormatted(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(
@@ -1783,8 +1783,8 @@ extension AccountModelQuerySortBy
     });
   }
 
-  QueryBuilder<AccountModel, AccountModel, QAfterSortBy> sortByTotpStrDesc(
-      {bool caseSensitive = true}) {
+  QueryBuilder<AccountModel, AccountModel, QAfterSortBy>
+      sortByTotpFormattedDesc({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(
         2,
@@ -1950,15 +1950,15 @@ extension AccountModelQuerySortThenBy
     });
   }
 
-  QueryBuilder<AccountModel, AccountModel, QAfterSortBy> thenByTotpStr(
+  QueryBuilder<AccountModel, AccountModel, QAfterSortBy> thenByTotpFormatted(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(2, caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<AccountModel, AccountModel, QAfterSortBy> thenByTotpStrDesc(
-      {bool caseSensitive = true}) {
+  QueryBuilder<AccountModel, AccountModel, QAfterSortBy>
+      thenByTotpFormattedDesc({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(2, sort: Sort.desc, caseSensitive: caseSensitive);
     });
@@ -2079,8 +2079,8 @@ extension AccountModelQueryWhereDistinct
     });
   }
 
-  QueryBuilder<AccountModel, AccountModel, QAfterDistinct> distinctByTotpStr(
-      {bool caseSensitive = true}) {
+  QueryBuilder<AccountModel, AccountModel, QAfterDistinct>
+      distinctByTotpFormatted({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(2, caseSensitive: caseSensitive);
     });
@@ -2142,7 +2142,7 @@ extension AccountModelQueryProperty1
     });
   }
 
-  QueryBuilder<AccountModel, String, QAfterProperty> totpStrProperty() {
+  QueryBuilder<AccountModel, String, QAfterProperty> totpFormattedProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addProperty(2);
     });
@@ -2205,7 +2205,8 @@ extension AccountModelQueryProperty2<R>
     });
   }
 
-  QueryBuilder<AccountModel, (R, String), QAfterProperty> totpStrProperty() {
+  QueryBuilder<AccountModel, (R, String), QAfterProperty>
+      totpFormattedProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addProperty(2);
     });
@@ -2268,7 +2269,8 @@ extension AccountModelQueryProperty3<R1, R2>
     });
   }
 
-  QueryBuilder<AccountModel, (R1, R2, String), QOperations> totpStrProperty() {
+  QueryBuilder<AccountModel, (R1, R2, String), QOperations>
+      totpFormattedProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addProperty(2);
     });

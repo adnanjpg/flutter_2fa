@@ -1,9 +1,13 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_2fa/models/account_model.dart';
 import 'package:flutter_2fa/services/local_db_service.dart';
 import 'package:flutter_2fa/ui/error_widget.dart';
 import 'package:flutter_2fa/ui/loading_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:remixicon/remixicon.dart';
 
 class AccountDetailScreen extends StatelessWidget {
   const AccountDetailScreen({
@@ -16,7 +20,23 @@ class AccountDetailScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Account Detail'),
       ),
-      body: const _Bod(),
+      body: Row(
+        children: [
+          const Expanded(
+            child: SizedBox(),
+          ),
+          SizedBox(
+            width: min(
+              500,
+              MediaQuery.of(context).size.width * 0.8,
+            ),
+            child: const _Bod(),
+          ),
+          const Expanded(
+            child: SizedBox(),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -41,6 +61,15 @@ final accountStreamProv = StreamProvider<AccountModel?>(
 class _Bod extends ConsumerWidget {
   const _Bod();
 
+  void onCopyPressed(BuildContext context, String text) {
+    Clipboard.setData(ClipboardData(text: text));
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Copied to clipboard'),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final accountWatcher = ref.watch(accountStreamProv);
@@ -55,13 +84,24 @@ class _Bod extends ConsumerWidget {
           );
         }
 
+        final totpf = account.totpFormatted;
+
         return Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text('Account ID: ${account.id}'),
             Text('Account issuer: ${account.issuer}'),
-            Text('totp: ${account.totp}'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('totp: $totpf'),
+                IconButton(
+                  onPressed: () => onCopyPressed(context, totpf),
+                  icon: const Icon(Remix.clipboard_line),
+                ),
+              ],
+            ),
           ],
         );
       },

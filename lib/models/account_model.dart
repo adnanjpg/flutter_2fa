@@ -83,7 +83,13 @@ class AccountModel with _$AccountModel {
     return totp;
   }
 
-  String get totpStr => totp.toString().padLeft(digits, '0');
+  String get totpFormatted {
+    final str = totp.toString().padLeft(digits, '0');
+    return [
+      str.substring(0, 3),
+      str.substring(3),
+    ].join(' ');
+  }
 
   static int get invalidTempId => -1;
 }
