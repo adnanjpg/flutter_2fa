@@ -124,7 +124,7 @@ class _BodWDataState extends State<_BodWData> {
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TimerLine(
           totalDurationSec: account.period,
@@ -134,15 +134,59 @@ class _BodWDataState extends State<_BodWData> {
           },
         ),
         const SizedBox(height: 100),
-        Text('Account ID: ${account.id}'),
-        Text('Account issuer: ${account.issuer}'),
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 20),
+          child: Table(
+            border: TableBorder.all(
+              color: Colors.transparent,
+            ),
+            children: {
+              'ID': account.id.toString(),
+              'issuer': account.issuer,
+              'algorithm': account.algorithm,
+              'appname': account.appname,
+              'username': account.username,
+            }
+                .entries
+                .map(
+                  (e) => TableRow(
+                    children: [
+                      Container(
+                        alignment: AlignmentDirectional.centerEnd,
+                        margin: const EdgeInsetsDirectional.only(
+                          end: 30,
+                        ),
+                        child: Text(e.key),
+                      ),
+                      Container(
+                        alignment: AlignmentDirectional.centerStart,
+                        margin: const EdgeInsetsDirectional.only(
+                          start: 30,
+                        ),
+                        child: Text(e.value),
+                      ),
+                    ],
+                  ),
+                )
+                .toList(),
+          ),
+        ),
+        const SizedBox(height: 100),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('totp: $totpf'),
+            Text(
+              totpf,
+              style: const TextStyle(
+                fontSize: 50,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(width: 20),
             IconButton(
               onPressed: () => onCopyPressed(context, totpf),
               icon: const Icon(Remix.clipboard_line),
+              iconSize: 30,
             ),
           ],
         ),
