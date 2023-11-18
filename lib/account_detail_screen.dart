@@ -60,7 +60,8 @@ class _Bod extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text('Account ID: ${account.id}'),
-            Text('Account ID: ${account.issuer}'),
+            Text('Account issuer: ${account.issuer}'),
+            Text('totp: ${account.totp}'),
           ],
         );
       },

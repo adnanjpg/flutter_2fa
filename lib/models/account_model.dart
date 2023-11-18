@@ -1,8 +1,24 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:isar/isar.dart';
+import 'package:otp/otp.dart';
 
 part 'account_model.g.dart';
 part 'account_model.freezed.dart';
+
+extension on String {
+  Algorithm toAlgorithmEnum() {
+    switch (this) {
+      case 'SHA1':
+        return Algorithm.SHA1;
+      case 'SHA256':
+        return Algorithm.SHA256;
+      case 'SHA512':
+        return Algorithm.SHA512;
+      default:
+        throw Exception('Unknown algorithm: $this');
+    }
+  }
+}
 
 const collectionOnFreezed = Collection(ignore: {'copyWith'});
 
@@ -16,15 +32,11 @@ class AccountModel with _$AccountModel {
     required String secret,
     required String issuer,
     required String algorithm,
-    @Default(6) required int? digits,
-    @Default(30) required int? period,
+    required int digits,
+    required int period,
   }) = _AccountModel;
-  const AccountModel._();
-
-  static int get invalidTempId => -1;
 
   // otpauth://totp/YourAppName:username?secret=sharedsecret&issuer=YourAppName&algorithm=SHA1&digits=6&period=30
-  // fromUrl
   factory AccountModel.fromUrl(String url) {
     final uri = Uri.parse(url);
     final queryParameters = uri.queryParameters;
@@ -46,8 +58,32 @@ class AccountModel with _$AccountModel {
       secret: secret,
       issuer: issuer,
       algorithm: algorithm,
-      digits: digits,
-      period: period,
+      digits: digits ?? _defaultDigits,
+      period: period ?? _defaultPeriod,
     );
   }
+  const AccountModel._();
+
+  static const int _defaultDigits = 6;
+  static const int _defaultPeriod = 30;
+
+  int get totp {
+    final now = DateTime.now().toUtc();
+    final ms = now.millisecondsSinceEpoch;
+
+    final totp = OTP.generateTOTPCode(
+      secret,
+      ms,
+      length: digits,
+      interval: period,
+      algorithm: algorithm.toAlgorithmEnum(),
+      isGoogle: true,
+    );
+
+    return totp;
+  }
+
+  String get totpStr => totp.toString().padLeft(digits, '0');
+
+  static int get invalidTempId => -1;
 }
