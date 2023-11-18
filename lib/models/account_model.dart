@@ -21,6 +21,8 @@ class AccountModel with _$AccountModel {
   }) = _AccountModel;
   const AccountModel._();
 
+  static int get invalidTempId => -1;
+
   // otpauth://totp/YourAppName:username?secret=sharedsecret&issuer=YourAppName&algorithm=SHA1&digits=6&period=30
   // fromUrl
   factory AccountModel.fromUrl(String url) {
@@ -38,7 +40,7 @@ class AccountModel with _$AccountModel {
     final period = int.tryParse(queryParameters['period'] ?? '');
 
     return AccountModel(
-      id: 0,
+      id: invalidTempId,
       appname: appname,
       username: username,
       secret: secret,

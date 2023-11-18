@@ -36,11 +36,22 @@ class LocalDbService {
     try {
       final newAccount = await db.writeAsync(
         (isar) {
+          AccountModel newAccount;
+
+          if (account.id == AccountModel.invalidTempId) {
+            final id = isar.accountModels.autoIncrement();
+            newAccount = account.copyWith(
+              id: id,
+            );
+          } else {
+            newAccount = account;
+          }
+
           isar.accountModels.put(
-            account,
+            newAccount,
           );
 
-          return account;
+          return newAccount;
         },
       );
 
