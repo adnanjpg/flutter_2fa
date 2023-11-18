@@ -1,3 +1,4 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_2fa/account_detail_screen.dart';
 import 'package:flutter_2fa/add_account_screen.dart';
@@ -32,6 +33,30 @@ class Home extends StatelessWidget {
             onPressed: () {
               _addAccount(context);
             },
+          ),
+          // dropdown for light, dark and system
+          DropdownButton<AdaptiveThemeMode>(
+            value: AdaptiveTheme.of(context).mode,
+            onChanged: (value) {
+              final val = value;
+              if (val != null) {
+                AdaptiveTheme.of(context).setThemeMode(val);
+              }
+            },
+            items: const [
+              DropdownMenuItem(
+                value: AdaptiveThemeMode.light,
+                child: Text('Light'),
+              ),
+              DropdownMenuItem(
+                value: AdaptiveThemeMode.dark,
+                child: Text('Dark'),
+              ),
+              DropdownMenuItem(
+                value: AdaptiveThemeMode.system,
+                child: Text('System'),
+              ),
+            ],
           ),
         ],
       ),
