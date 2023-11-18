@@ -9,6 +9,7 @@ class TheApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ProviderScope(
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
           fontFamily: 'GeistMono',
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
