@@ -38,31 +38,36 @@ class AccountModel with _$AccountModel {
   }) = _AccountModel;
 
   // otpauth://totp/YourAppName:username?secret=sharedsecret&issuer=YourAppName&algorithm=SHA1&digits=6&period=30
-  factory AccountModel.fromUrl(String url) {
-    final uri = Uri.parse(url);
-    final queryParameters = uri.queryParameters;
+  static AccountModel? fromUrl(String url) {
+    try {
+      final uri = Uri.parse(url);
+      final queryParameters = uri.queryParameters;
 
-    final pathSeg = uri.pathSegments[0].split(':');
-    final appname = pathSeg[0];
-    final username = pathSeg[1];
+      final pathSeg = uri.pathSegments[0].split(':');
+      final appname = pathSeg[0];
+      final username = pathSeg[1];
 
-    final secret = queryParameters['secret']!;
-    final issuer = queryParameters['issuer']!;
-    final algorithm = queryParameters['algorithm']!;
-    final digits = int.tryParse(queryParameters['digits'] ?? '');
-    final period = int.tryParse(queryParameters['period'] ?? '');
+      final secret = queryParameters['secret']!;
+      final issuer = queryParameters['issuer']!;
+      final algorithm = queryParameters['algorithm']!;
+      final digits = int.tryParse(queryParameters['digits'] ?? '');
+      final period = int.tryParse(queryParameters['period'] ?? '');
 
-    return AccountModel(
-      id: invalidTempId,
-      appname: appname,
-      username: username,
-      secret: secret,
-      issuer: issuer,
-      algorithm: algorithm,
-      digits: digits ?? _defaultDigits,
-      period: period ?? _defaultPeriod,
-    );
+      return AccountModel(
+        id: invalidTempId,
+        appname: appname,
+        username: username,
+        secret: secret,
+        issuer: issuer,
+        algorithm: algorithm,
+        digits: digits ?? _defaultDigits,
+        period: period ?? _defaultPeriod,
+      );
+    } catch (e) {
+      return null;
+    }
   }
+
   const AccountModel._();
 
   static const int _defaultDigits = 6;

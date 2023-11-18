@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_2fa/models/account_model.dart';
 import 'package:flutter_2fa/services/local_db_service.dart';
 import 'package:flutter_2fa/services/logger_service.dart';
+import 'package:flutter_2fa/ui/account_info_widget.dart';
 import 'package:flutter_2fa/ui/error_widget.dart';
 import 'package:flutter_2fa/ui/loading_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -134,42 +135,8 @@ class _BodWDataState extends State<_BodWData> {
           },
         ),
         const SizedBox(height: 100),
-        Container(
-          margin: const EdgeInsets.symmetric(horizontal: 20),
-          child: Table(
-            border: TableBorder.all(
-              color: Colors.transparent,
-            ),
-            children: {
-              'ID': account.id.toString(),
-              'issuer': account.issuer,
-              'algorithm': account.algorithm,
-              'appname': account.appname,
-              'username': account.username,
-            }
-                .entries
-                .map(
-                  (e) => TableRow(
-                    children: [
-                      Container(
-                        alignment: AlignmentDirectional.centerEnd,
-                        margin: const EdgeInsetsDirectional.only(
-                          end: 30,
-                        ),
-                        child: Text(e.key),
-                      ),
-                      Container(
-                        alignment: AlignmentDirectional.centerStart,
-                        margin: const EdgeInsetsDirectional.only(
-                          start: 30,
-                        ),
-                        child: Text(e.value),
-                      ),
-                    ],
-                  ),
-                )
-                .toList(),
-          ),
+        AccountInfoWidget(
+          account: account,
         ),
         const SizedBox(height: 100),
         Row(
