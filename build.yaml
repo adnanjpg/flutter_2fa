@@ -1,0 +1,14 @@
+targets:
+  $default:
+    builders:
+      freezed:freezed:
+        generate_for:
+          - lib/models/**.dart
+      isar:isar_generator:
+        generate_for:
+          - lib/models/**.dart
+
+global_options:
+  freezed:freezed:
+    runs_before:
+      - isar:isar_generator
