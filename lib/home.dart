@@ -59,11 +59,34 @@ class AccountList extends ConsumerWidget {
             maxCrossAxisExtent: 200,
           ),
           itemCount: accounts.length,
-          itemBuilder: (context, index) => Text(
-            accounts.elementAt(index).appname,
-          ),
+          itemBuilder: (context, index) {
+            final item = accounts.elementAt(index);
+
+            return AccountLI(
+              item: item,
+            );
+          },
         );
       },
+    );
+  }
+}
+
+class AccountLI extends StatelessWidget {
+  const AccountLI({
+    required this.item,
+    super.key,
+  });
+  final AccountModel item;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Center(
+        child: Text(
+          item.appname,
+        ),
+      ),
     );
   }
 }
