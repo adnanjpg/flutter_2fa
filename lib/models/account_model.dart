@@ -1,3 +1,4 @@
+import 'package:flutter_2fa/services/logger_service.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:isar/isar.dart';
 import 'package:otp/otp.dart';
@@ -70,6 +71,8 @@ class AccountModel with _$AccountModel {
   int get totp {
     final now = DateTime.now().toUtc();
     final ms = now.millisecondsSinceEpoch;
+
+    logger.i('now: $now');
 
     final totp = OTP.generateTOTPCode(
       secret,
