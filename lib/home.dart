@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_2fa/account_detail_screen.dart';
 import 'package:flutter_2fa/add_account_screen.dart';
 import 'package:flutter_2fa/models/account_model.dart';
 import 'package:flutter_2fa/services/local_db_service.dart';
@@ -72,19 +73,32 @@ class AccountList extends ConsumerWidget {
   }
 }
 
-class AccountLI extends StatelessWidget {
+class AccountLI extends ConsumerWidget {
   const AccountLI({
     required this.item,
     super.key,
   });
   final AccountModel item;
 
+  void _onTap(BuildContext context, WidgetRef ref) {
+    ref.read(selectedAccountIdProv.notifier).state = item.id;
+
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (context) => const AccountDetailScreen(),
+      ),
+    );
+  }
+
   @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Center(
-        child: Text(
-          item.appname,
+  Widget build(BuildContext context, WidgetRef ref) {
+    return InkWell(
+      onTap: () => _onTap(context, ref),
+      child: Card(
+        child: Center(
+          child: Text(
+            item.appname,
+          ),
         ),
       ),
     );

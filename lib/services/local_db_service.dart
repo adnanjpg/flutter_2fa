@@ -134,6 +134,29 @@ class LocalDbService {
     }
   }
 
+  Stream<AccountModel> watchAccount({
+    required int accountId,
+  }) {
+    try {
+      final accounts = db.accountModels
+          .where()
+          .idEqualTo(accountId)
+          .watch(fireImmediately: true);
+
+      final account = accounts.map(
+        (event) {
+          return event.first;
+        },
+      );
+
+      return account;
+    } catch (e) {
+      logger.e(e);
+
+      return const Stream.empty();
+    }
+  }
+
   Future<AccountModel?> getAccountById({
     required int accountId,
   }) async {
