@@ -16,8 +16,36 @@ class AccountModel with _$AccountModel {
     required String secret,
     required String issuer,
     required String algorithm,
-    required int digits,
-    required int period,
+    @Default(6) required int? digits,
+    @Default(30) required int? period,
   }) = _AccountModel;
   const AccountModel._();
+
+  // otpauth://totp/YourAppName:username?secret=sharedsecret&issuer=YourAppName&algorithm=SHA1&digits=6&period=30
+  // fromUrl
+  factory AccountModel.fromUrl(String url) {
+    final uri = Uri.parse(url);
+    final queryParameters = uri.queryParameters;
+
+    final pathSeg = uri.pathSegments[0].split(':');
+    final appname = pathSeg[0];
+    final username = pathSeg[1];
+
+    final secret = queryParameters['secret']!;
+    final issuer = queryParameters['issuer']!;
+    final algorithm = queryParameters['algorithm']!;
+    final digits = int.tryParse(queryParameters['digits'] ?? '');
+    final period = int.tryParse(queryParameters['period'] ?? '');
+
+    return AccountModel(
+      id: 0,
+      appname: appname,
+      username: username,
+      secret: secret,
+      issuer: issuer,
+      algorithm: algorithm,
+      digits: digits,
+      period: period,
+    );
+  }
 }

@@ -22,8 +22,8 @@ mixin _$AccountModel {
   String get secret => throw _privateConstructorUsedError;
   String get issuer => throw _privateConstructorUsedError;
   String get algorithm => throw _privateConstructorUsedError;
-  int get digits => throw _privateConstructorUsedError;
-  int get period => throw _privateConstructorUsedError;
+  int? get digits => throw _privateConstructorUsedError;
+  int? get period => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $AccountModelCopyWith<AccountModel> get copyWith =>
@@ -43,8 +43,8 @@ abstract class $AccountModelCopyWith<$Res> {
       String secret,
       String issuer,
       String algorithm,
-      int digits,
-      int period});
+      int? digits,
+      int? period});
 }
 
 /// @nodoc
@@ -66,8 +66,8 @@ class _$AccountModelCopyWithImpl<$Res, $Val extends AccountModel>
     Object? secret = null,
     Object? issuer = null,
     Object? algorithm = null,
-    Object? digits = null,
-    Object? period = null,
+    Object? digits = freezed,
+    Object? period = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -94,14 +94,14 @@ class _$AccountModelCopyWithImpl<$Res, $Val extends AccountModel>
           ? _value.algorithm
           : algorithm // ignore: cast_nullable_to_non_nullable
               as String,
-      digits: null == digits
+      digits: freezed == digits
           ? _value.digits
           : digits // ignore: cast_nullable_to_non_nullable
-              as int,
-      period: null == period
+              as int?,
+      period: freezed == period
           ? _value.period
           : period // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
     ) as $Val);
   }
 }
@@ -121,8 +121,8 @@ abstract class _$$_AccountModelCopyWith<$Res>
       String secret,
       String issuer,
       String algorithm,
-      int digits,
-      int period});
+      int? digits,
+      int? period});
 }
 
 /// @nodoc
@@ -142,8 +142,8 @@ class __$$_AccountModelCopyWithImpl<$Res>
     Object? secret = null,
     Object? issuer = null,
     Object? algorithm = null,
-    Object? digits = null,
-    Object? period = null,
+    Object? digits = freezed,
+    Object? period = freezed,
   }) {
     return _then(_$_AccountModel(
       id: null == id
@@ -170,14 +170,14 @@ class __$$_AccountModelCopyWithImpl<$Res>
           ? _value.algorithm
           : algorithm // ignore: cast_nullable_to_non_nullable
               as String,
-      digits: null == digits
+      digits: freezed == digits
           ? _value.digits
           : digits // ignore: cast_nullable_to_non_nullable
-              as int,
-      period: null == period
+              as int?,
+      period: freezed == period
           ? _value.period
           : period // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
     ));
   }
 }
@@ -209,9 +209,9 @@ class _$_AccountModel extends _AccountModel {
   @override
   final String algorithm;
   @override
-  final int digits;
+  final int? digits;
   @override
-  final int period;
+  final int? period;
 
   @override
   String toString() {
@@ -254,8 +254,8 @@ abstract class _AccountModel extends AccountModel {
       required final String secret,
       required final String issuer,
       required final String algorithm,
-      required final int digits,
-      required final int period}) = _$_AccountModel;
+      required final int? digits,
+      required final int? period}) = _$_AccountModel;
   const _AccountModel._() : super._();
 
   @override
@@ -271,9 +271,9 @@ abstract class _AccountModel extends AccountModel {
   @override
   String get algorithm;
   @override
-  int get digits;
+  int? get digits;
   @override
-  int get period;
+  int? get period;
   @override
   @JsonKey(ignore: true)
   _$$_AccountModelCopyWith<_$_AccountModel> get copyWith =>

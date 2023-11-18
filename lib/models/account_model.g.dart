@@ -66,8 +66,8 @@ int serializeAccountModel(IsarWriter writer, AccountModel object) {
   IsarCore.writeString(writer, 3, object.secret);
   IsarCore.writeString(writer, 4, object.issuer);
   IsarCore.writeString(writer, 5, object.algorithm);
-  IsarCore.writeLong(writer, 6, object.digits);
-  IsarCore.writeLong(writer, 7, object.period);
+  IsarCore.writeLong(writer, 6, object.digits ?? -9223372036854775808);
+  IsarCore.writeLong(writer, 7, object.period ?? -9223372036854775808);
   return object.id;
 }
 
@@ -85,10 +85,24 @@ AccountModel deserializeAccountModel(IsarReader reader) {
   _issuer = IsarCore.readString(reader, 4) ?? '';
   final String _algorithm;
   _algorithm = IsarCore.readString(reader, 5) ?? '';
-  final int _digits;
-  _digits = IsarCore.readLong(reader, 6);
-  final int _period;
-  _period = IsarCore.readLong(reader, 7);
+  final int? _digits;
+  {
+    final value = IsarCore.readLong(reader, 6);
+    if (value == -9223372036854775808) {
+      _digits = null;
+    } else {
+      _digits = value;
+    }
+  }
+  final int? _period;
+  {
+    final value = IsarCore.readLong(reader, 7);
+    if (value == -9223372036854775808) {
+      _period = null;
+    } else {
+      _period = value;
+    }
+  }
   final object = AccountModel(
     id: _id,
     appname: _appname,
@@ -118,9 +132,23 @@ dynamic deserializeAccountModelProp(IsarReader reader, int property) {
     case 5:
       return IsarCore.readString(reader, 5) ?? '';
     case 6:
-      return IsarCore.readLong(reader, 6);
+      {
+        final value = IsarCore.readLong(reader, 6);
+        if (value == -9223372036854775808) {
+          return null;
+        } else {
+          return value;
+        }
+      }
     case 7:
-      return IsarCore.readLong(reader, 7);
+      {
+        final value = IsarCore.readLong(reader, 7);
+        if (value == -9223372036854775808) {
+          return null;
+        } else {
+          return value;
+        }
+      }
     default:
       throw ArgumentError('Unknown property: $property');
   }
@@ -1288,8 +1316,22 @@ extension AccountModelQueryFilter
     });
   }
 
+  QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition>
+      digitsIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const IsNullCondition(property: 6));
+    });
+  }
+
+  QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition>
+      digitsIsNotNull() {
+    return QueryBuilder.apply(not(), (query) {
+      return query.addFilterCondition(const IsNullCondition(property: 6));
+    });
+  }
+
   QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition> digitsEqualTo(
-    int value,
+    int? value,
   ) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
@@ -1303,7 +1345,7 @@ extension AccountModelQueryFilter
 
   QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition>
       digitsGreaterThan(
-    int value,
+    int? value,
   ) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
@@ -1317,7 +1359,7 @@ extension AccountModelQueryFilter
 
   QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition>
       digitsGreaterThanOrEqualTo(
-    int value,
+    int? value,
   ) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
@@ -1331,7 +1373,7 @@ extension AccountModelQueryFilter
 
   QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition>
       digitsLessThan(
-    int value,
+    int? value,
   ) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
@@ -1345,7 +1387,7 @@ extension AccountModelQueryFilter
 
   QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition>
       digitsLessThanOrEqualTo(
-    int value,
+    int? value,
   ) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
@@ -1358,8 +1400,8 @@ extension AccountModelQueryFilter
   }
 
   QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition> digitsBetween(
-    int lower,
-    int upper,
+    int? lower,
+    int? upper,
   ) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
@@ -1372,8 +1414,22 @@ extension AccountModelQueryFilter
     });
   }
 
+  QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition>
+      periodIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const IsNullCondition(property: 7));
+    });
+  }
+
+  QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition>
+      periodIsNotNull() {
+    return QueryBuilder.apply(not(), (query) {
+      return query.addFilterCondition(const IsNullCondition(property: 7));
+    });
+  }
+
   QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition> periodEqualTo(
-    int value,
+    int? value,
   ) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
@@ -1387,7 +1443,7 @@ extension AccountModelQueryFilter
 
   QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition>
       periodGreaterThan(
-    int value,
+    int? value,
   ) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
@@ -1401,7 +1457,7 @@ extension AccountModelQueryFilter
 
   QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition>
       periodGreaterThanOrEqualTo(
-    int value,
+    int? value,
   ) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
@@ -1415,7 +1471,7 @@ extension AccountModelQueryFilter
 
   QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition>
       periodLessThan(
-    int value,
+    int? value,
   ) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
@@ -1429,7 +1485,7 @@ extension AccountModelQueryFilter
 
   QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition>
       periodLessThanOrEqualTo(
-    int value,
+    int? value,
   ) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
@@ -1442,8 +1498,8 @@ extension AccountModelQueryFilter
   }
 
   QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition> periodBetween(
-    int lower,
-    int upper,
+    int? lower,
+    int? upper,
   ) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
@@ -1801,13 +1857,13 @@ extension AccountModelQueryProperty1
     });
   }
 
-  QueryBuilder<AccountModel, int, QAfterProperty> digitsProperty() {
+  QueryBuilder<AccountModel, int?, QAfterProperty> digitsProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addProperty(6);
     });
   }
 
-  QueryBuilder<AccountModel, int, QAfterProperty> periodProperty() {
+  QueryBuilder<AccountModel, int?, QAfterProperty> periodProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addProperty(7);
     });
@@ -1852,13 +1908,13 @@ extension AccountModelQueryProperty2<R>
     });
   }
 
-  QueryBuilder<AccountModel, (R, int), QAfterProperty> digitsProperty() {
+  QueryBuilder<AccountModel, (R, int?), QAfterProperty> digitsProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addProperty(6);
     });
   }
 
-  QueryBuilder<AccountModel, (R, int), QAfterProperty> periodProperty() {
+  QueryBuilder<AccountModel, (R, int?), QAfterProperty> periodProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addProperty(7);
     });
@@ -1904,13 +1960,13 @@ extension AccountModelQueryProperty3<R1, R2>
     });
   }
 
-  QueryBuilder<AccountModel, (R1, R2, int), QOperations> digitsProperty() {
+  QueryBuilder<AccountModel, (R1, R2, int?), QOperations> digitsProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addProperty(6);
     });
   }
 
-  QueryBuilder<AccountModel, (R1, R2, int), QOperations> periodProperty() {
+  QueryBuilder<AccountModel, (R1, R2, int?), QOperations> periodProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addProperty(7);
     });
