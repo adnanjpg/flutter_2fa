@@ -52,7 +52,7 @@ class AddAccountScreen extends StatelessWidget {
 }
 
 final selectedPickFromOptionProvider = StateProvider<PickFromOptions>(
-  (ref) => PickFromOptions.camera,
+  (ref) => PickFromOptions.inputUrl,
 );
 
 class _Bod extends ConsumerStatefulWidget {
