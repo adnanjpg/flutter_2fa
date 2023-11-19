@@ -1,10 +1,26 @@
 import 'dart:math';
+import 'dart:typed_data';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_2fa/models/account_model.dart';
 import 'package:flutter_2fa/services/local_db_service.dart';
 import 'package:flutter_2fa/ui/account_info_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
+
+enum PickFromOptions {
+  camera,
+  inputUrl,
+}
+
+extension on String {
+  bool get isValidTotpUrl {
+    return startsWith('otpauth://totp') &&
+        contains('?secret=') &&
+        contains('&issuer=');
+  }
+}
 
 class AddAccountScreen extends StatelessWidget {
   const AddAccountScreen({super.key});
@@ -35,6 +51,10 @@ class AddAccountScreen extends StatelessWidget {
     );
   }
 }
+
+final selectedPickFromOptionProvider = StateProvider<PickFromOptions>(
+  (ref) => PickFromOptions.camera,
+);
 
 class _Bod extends ConsumerStatefulWidget {
   const _Bod();
@@ -67,21 +87,7 @@ class _DetectedUrlWidgetState extends ConsumerState<_Bod> {
     };
   }
 
-  late TextEditingController _controller;
-
   String enteredMsg = '';
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = TextEditingController();
-
-    _controller.addListener(() {
-      setState(() {
-        enteredMsg = _controller.text;
-      });
-    });
-  }
 
   String get detectedUrl => enteredMsg;
 
@@ -91,27 +97,29 @@ class _DetectedUrlWidgetState extends ConsumerState<_Bod> {
 
     return Column(
       children: [
-        TextField(
-          controller: _controller,
-          decoration: const InputDecoration(
-            labelText: 'URL',
-            border: OutlineInputBorder(),
-          ),
+        UrlPickerWidget(
+          onUrlChanged: (url) {
+            enteredMsg = url;
+            setState(() {});
+          },
         ),
         if (account != null)
           Column(
             children: [
               const SizedBox(
-                height: 50,
+                height: 30,
               ),
               AccountInfoWidget(
                 account: account,
               ),
               const SizedBox(
-                height: 50,
+                height: 20,
               ),
             ],
           ),
+        const SizedBox(
+          height: 10,
+        ),
         ElevatedButton(
           onPressed: onAddAccountPressed(
             ref: ref,
@@ -119,6 +127,92 @@ class _DetectedUrlWidgetState extends ConsumerState<_Bod> {
           ),
           child: const Text('Add Account'),
         ),
+      ],
+    );
+  }
+}
+
+class UrlPickerWidget extends ConsumerStatefulWidget {
+  const UrlPickerWidget({
+    required this.onUrlChanged,
+    super.key,
+  });
+  final void Function(String url)? onUrlChanged;
+
+  @override
+  ConsumerState<UrlPickerWidget> createState() => _UrlPickerWidgetState();
+}
+
+class _UrlPickerWidgetState extends ConsumerState<UrlPickerWidget> {
+  late TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController()
+      ..addListener(() {
+        widget.onUrlChanged?.call(_controller.text);
+      });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final pickOption = ref.watch(selectedPickFromOptionProvider);
+
+    return Column(
+      children: [
+        CupertinoSegmentedControl<PickFromOptions>(
+          children: const {
+            PickFromOptions.camera: Text('Camera'),
+            PickFromOptions.inputUrl: Text('Input URL'),
+          },
+          onValueChanged: (value) {
+            ref.read(selectedPickFromOptionProvider.notifier).state = value;
+          },
+          groupValue: pickOption,
+        ),
+        const SizedBox(
+          height: 30,
+        ),
+        if (pickOption == PickFromOptions.camera)
+          SizedBox(
+            height: 300,
+            child: MobileScanner(
+              controller: MobileScannerController(
+                detectionSpeed: DetectionSpeed.normal,
+                formats: [
+                  BarcodeFormat.qrCode,
+                ],
+              ),
+              onDetect: (capture) {
+                final barcodes = capture.barcodes;
+                final barcode = barcodes.isEmpty ? null : barcodes.first;
+                final url = barcode?.rawValue ?? '';
+
+                if (url.isEmpty) {
+                  return;
+                }
+
+                if (!url.isValidTotpUrl) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Invalid URL'),
+                    ),
+                  );
+                }
+
+                widget.onUrlChanged?.call(url);
+              },
+            ),
+          ),
+        if (pickOption == PickFromOptions.inputUrl)
+          TextField(
+            controller: _controller,
+            decoration: const InputDecoration(
+              labelText: 'URL',
+              border: OutlineInputBorder(),
+            ),
+          ),
       ],
     );
   }
