@@ -36,6 +36,7 @@ class AccountModel with _$AccountModel {
     required int digits,
     required int period,
   }) = _AccountModel;
+  const AccountModel._();
 
   // otpauth://totp/YourAppName:username?secret=sharedsecret&issuer=YourAppName&algorithm=SHA1&digits=6&period=30
   static AccountModel? fromUrl(String url) {
@@ -67,8 +68,6 @@ class AccountModel with _$AccountModel {
       return null;
     }
   }
-
-  const AccountModel._();
 
   static const int _defaultDigits = 6;
   static const int _defaultPeriod = 30;
